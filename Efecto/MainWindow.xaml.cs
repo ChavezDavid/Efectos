@@ -27,6 +27,7 @@ namespace Efecto
         WaveOutEvent waveOut;
         AudioFileReader reader;
         Efecto1 efectoProvider;
+        Delay delayProvider;
 
         public MainWindow()
         {
@@ -77,6 +78,20 @@ namespace Efecto
             if (efectoProvider != null)
             {
                 efectoProvider.Factor = (float)sldFactor.Value;
+            }
+        }
+
+        private void btnDelay_Click(object sender, RoutedEventArgs e)
+        {
+            if (waveOut != null && reader != null)
+            {
+                if (waveOut.PlaybackState == PlaybackState.Playing)
+                {
+                    waveOut.Stop();
+                }
+                delayProvider = new Delay(reader);
+                waveOut.Init(delayProvider);
+                waveOut.Play();
             }
         }
     }

@@ -31,10 +31,16 @@ namespace Efecto
         public int Read(float[] buffer, int offset, int count)
         {
             var read = fuente.Read(buffer, offset, count);
+            float tiempoTranscurrido = (float)offset / (float)fuente.WaveFormat.SampleRate;
+            float tiempoTranscurridoMS = tiempoTranscurrido * 1000;
+            int numMuestrasOffsetTiempo = (int)(((float)offsetTiempoMS / 1000.0f) * (float)fuente.WaveFormat.SampleRate);
 
-            for(int i = 0; i < read; i++)
+            if (tiempoTranscurridoMS > offsetTiempoMS)
             {
-                
+                for (int i = 0; i < read; i++)
+                {
+                    buffer[offset + i] += buffer[offset + i - numMuestrasOffsetTiempo];
+                }
             }
 
             return read;
